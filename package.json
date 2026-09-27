@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@github/local-action": "^7.0.1",
-    "@types/node": "^24.13.3",
+    "@types/node": "^24.19.0",
     "typescript": "^7.0.2",
-    "vite-plus": "^0.3.0",
+    "vite-plus": "^0.3.3",
     "vitest": "^4.1.11"
   }
 }
