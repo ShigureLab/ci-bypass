@@ -15,7 +15,7 @@ interface CommentWithActor {
 }
 
 function compilePattern(pattern: string): RegExp {
-  return new RegExp(pattern, 'g')
+  return new RegExp(pattern)
 }
 
 export class CommentRule extends AbstractRule {
