@@ -50,10 +50,12 @@ export class LabelRule extends AbstractRule {
       .map((label) => label.name)
       .filter((label) => this.labels.includes(label))
 
-    const labeledEvents = allEventsResponse.filter((event) => event.event === 'labeled')
+    const reversedLabeledEvents = allEventsResponse
+      .filter((event) => event.event === 'labeled')
+      .reverse()
 
     const isValidLabel = async (label: string): Promise<boolean> => {
-      for (const labeledEvent of labeledEvents.reverse()) {
+      for (const labeledEvent of reversedLabeledEvents) {
         if ('label' in labeledEvent && labeledEvent.label.name === label) {
           const currentEventUserName = labeledEvent.actor.login
           return await isValidUser(
@@ -65,17 +67,17 @@ export class LabelRule extends AbstractRule {
           )
         }
       }
-      const availableLabels = labeledEvents
+      const availableLabels = reversedLabeledEvents
         .map((event) => ('label' in event ? event.label.name : null))
         .filter((name): name is string => name !== null)
       core.error(
-        `Label "${label}" not found in labeledEvents. Available labels in events: ${JSON.stringify(
+        `Label "${label}" not found in reversedLabeledEvents. Available labels in events: ${JSON.stringify(
           availableLabels
         )}`
       )
       return false
     }
-    core.debug(`labeledEvents: ${JSON.stringify(labeledEvents)}`)
+    core.debug(`reversedLabeledEvents: ${JSON.stringify(reversedLabeledEvents)}`)
     core.debug(`currentLabels: ${JSON.stringify(currentLabels)}`)
     return await Promise.all(currentLabels.map(isValidLabel)).then((results) =>
       results.some(Boolean)
